@@ -21,6 +21,10 @@ for (@ARGV) {
         $rc = 1;
     } elsif ($a->format() ne $_) {
         print STDERR "non-canonical addr-spec: $_\n";
+    } elsif ($a =~ /[\x80-\xFF]/) {
+        print STDERR "non-ASCII chars in addr-spec: $_\n";
+    } elsif ($a =~ /[\x00-\x1F\x7F]/) {
+        print STDERR "control chars in addr-spec: $_\n";
     }
 }
 exit $rc;
