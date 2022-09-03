@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+
+# Copyright © 2022 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
+no lib '.';  # CVE-2016-1238
+
+use strict;
+use warnings;
+use English qw(-no_match_vars);
+
+use Data::Dumper ();
+
+use Email::Address::XS ();
+
+my $rc = 0;
+for (@ARGV) {
+    my $a = Email::Address::XS->parse_bare_address($_);
+    if (not $a->is_valid) {
+        print STDERR "bad addr-spec: $_\n";
+        $rc = 1;
+    } elsif ($a->format() ne $_) {
+        print STDERR "non-canonical addr-spec: $_\n";
+    }
+}
+exit $rc;
+
+# vim:ts=4 sts=4 sw=4 et
